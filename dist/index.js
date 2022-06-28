@@ -85,17 +85,44 @@ app.post("/shorten-url", function (req, res) {
                 case 1:
                     _a.sent();
                     console.log(req.body.text);
-                    res.send("http://localhost:3000/s/" + short);
+                    res.send("http://localhost:3000/" + short);
                     return [2 /*return*/];
             }
         });
     });
 });
-app.get("/s/:id", function (req) {
+app.post("/s", function (req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var result;
         return __generator(this, function (_a) {
-            console.log(req);
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, prisma.uRL.findUnique({
+                        where: {
+                            shortUrl: req.body.text
+                        }
+                    })];
+                case 1:
+                    result = _a.sent();
+                    if (!!result) return [3 /*break*/, 2];
+                    res.status(404).send();
+                    return [2 /*return*/];
+                case 2:
+                    res.send(result.originalUrl);
+                    //adds a increment to the database to show how many times the shortened url was used
+                    return [4 /*yield*/, prisma.uRL.update({
+                            where: {
+                                shortUrl: result.shortUrl
+                            },
+                            data: {
+                                usedCount: { increment: 1 }
+                            }
+                        })];
+                case 3:
+                    //adds a increment to the database to show how many times the shortened url was used
+                    _a.sent();
+                    _a.label = 4;
+                case 4: return [2 /*return*/];
+            }
         });
     });
 });
