@@ -43,6 +43,7 @@ var express_1 = __importDefault(require("express"));
 var cors = require("cors");
 var body_parser_1 = __importDefault(require("body-parser"));
 var client_1 = require("@prisma/client");
+var shortid = require("shortid");
 var app = (0, express_1["default"])();
 var prisma = new client_1.PrismaClient();
 app.use(cors());
@@ -66,14 +67,37 @@ main()["catch"](function (e) {
         }
     });
 }); });
-//Work for tomorrow, look into prisma to handle database for you, similar to entity framework. Find something that creates a unique id like nano library
-//To do, when user sends through post. Save original link to table. create new link and save to table. when user inputs new link, look at table to redirect user to original link
-//add count to table
-//table structure:
-//Unique created id / original link / times used
+//runs when the user sends through a url they want shortened
 app.post("/shorten-url", function (req, res) {
-    console.log(req.body.text);
-    res.send("Hello World");
+    return __awaiter(this, void 0, void 0, function () {
+        var short;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    short = shortid.generate();
+                    return [4 /*yield*/, prisma.uRL.create({
+                            data: {
+                                originalUrl: req.body.text,
+                                shortUrl: short,
+                                usedCount: 0
+                            }
+                        })];
+                case 1:
+                    _a.sent();
+                    console.log(req.body.text);
+                    res.send("http://localhost:3000/s/" + short);
+                    return [2 /*return*/];
+            }
+        });
+    });
+});
+app.get("/s/:id", function (req) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            console.log(req);
+            return [2 /*return*/];
+        });
+    });
 });
 app.listen(3001);
 //# sourceMappingURL=index.js.map

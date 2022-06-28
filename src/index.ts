@@ -2,6 +2,7 @@ import express from "express";
 const cors = require("cors");
 import bodyparser from "body-parser";
 import { PrismaClient } from "@prisma/client";
+const shortid = require("shortid");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -21,20 +22,28 @@ main()
     await prisma.$disconnect();
   });
 
-//Work for tomorrow, look into prisma to handle database for you, similar to entity framework. Find something that creates a unique id like nano library
-//To do, when user sends through post. Save original link to table. create new link and save to table. when user inputs new link, look at table to redirect user to original link
-//add count to table
-//table structure:
-//Unique created id / original link / times used
+//runs when the user sends through a url they want shortened
 app.post(
   "/shorten-url",
-  function (
+  async function (
     req: { body: { text: any } },
     res: { send: (arg0: string) => void }
   ) {
+    const short = shortid.generate();
+    await prisma.uRL.create({
+      data: {
+        originalUrl: req.body.text,
+        shortUrl: short,
+        usedCount: 0,
+      },
+    });
     console.log(req.body.text);
-    res.send("Hello World");
+    res.send("http://localhost:3000/s/" + short);
   }
 );
+
+app.get("/s/:id", async function (req) {
+  console.log(req);
+});
 
 app.listen(3001);
