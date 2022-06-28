@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js"
@@ -12,5 +11,21 @@
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.18.1"
-  }
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "prisma": "^4.0.0",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewgraham1/payrocBackend.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/andrewgraham1/payrocBackend/issues"
+  },
+  "homepage": "https://github.com/andrewgraham1/payrocBackend#readme",
+  "description": ""
 }
